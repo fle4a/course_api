@@ -11,6 +11,7 @@ from internal.core.exception_handlers import http_exception_handler, request_val
 from internal.core.logs.log_record_factory import LogRecordFactory
 from internal.core.middlewares import AddHeaderMiddleware, LoggingMiddleware
 from internal.core.settings.validators import validate_config
+from internal.repositories.db.helpers import close_db_connections, init_db
 
 
 def add_routers(app: FastAPI):
@@ -31,7 +32,9 @@ def add_middlewares(app: FastAPI):
 @asynccontextmanager
 async def initialize(app: FastAPI):
     validate_config(config)
+    await init_db()
     yield
+    await close_db_connections()
 
 
 def logging_initialize():

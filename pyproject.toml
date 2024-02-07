@@ -44,7 +44,7 @@ multi_line_output = 3
 lines_after_imports = 2
 lines_between_sections = 1
 known_local_folder  = ['app']
-known_first_party = ['fastapi', 'starlette', 'pydantic', 'pytest', 'uvicorn']
+known_first_party = ['fastapi', 'starlette', 'pydantic', 'pytest', 'uvicorn', 'tortoise']
 sections = ['FUTURE', 'STDLIB', 'FIRSTPARTY', 'THIRDPARTY', 'LOCALFOLDER']
 
 [tool.semgrep]
@@ -59,6 +59,8 @@ fastapi = "^0.109.0"
 pyyaml = "~6.0"
 uvicorn = {extras = ["uvloop"], version = "^0.26.0"}
 gunicorn = "~21.2.0"
+tortoise-orm = {extras = ["asyncpg"], version = "^0.20.0"}
+aerich = {extras = ["asyncpg"], version = "^0.7.2"}
 
 [tool.poetry.group.test]
 optional=true
@@ -91,3 +93,7 @@ build-backend = "poetry.core.masonry.api"
 asyncio_mode = "auto"
 pythonpath = "app"
 
+[tool.aerich]
+tortoise_orm = "internal.repositories.db.helpers.TORTOISE_ORM_CONFIG"
+location = "app/internal/repositories/db/migrations"
+src_folder = "./app"
