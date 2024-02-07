@@ -1,0 +1,4 @@
+[general]
+ignore=B6, T1
+[body-is-missing]
+ignore-merge-commits=false
