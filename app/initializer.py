@@ -7,11 +7,11 @@ from starlette.exceptions import HTTPException
 
 import config
 from internal.api import API_ROUTER
-from internal.core.exception_handlers import http_exception_handler, request_validation_exception_handler, unknown_exception_handler
+from internal.core.exception_handlers import http_exception_handler, request_validation_exception_handler, unknown_exception_handler,app_exception_handler
 from internal.core.logs.log_record_factory import LogRecordFactory
 from internal.core.middlewares import AddHeaderMiddleware, LoggingMiddleware
 from internal.core.settings.validators import validate_config
-from internal.repositories.db.helpers import close_db_connections, init_db
+from internal.core.exceptions import AppException
 
 
 def add_routers(app: FastAPI):
@@ -22,6 +22,7 @@ def add_exception_handlers(app: FastAPI):
     app.add_exception_handler(Exception, unknown_exception_handler)
     app.add_exception_handler(HTTPException, http_exception_handler)
     app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
+    app.add_exception_handler(AppException, app_exception_handler)
 
 
 def add_middlewares(app: FastAPI):
@@ -32,9 +33,7 @@ def add_middlewares(app: FastAPI):
 @asynccontextmanager
 async def initialize(app: FastAPI):
     validate_config(config)
-    await init_db()
     yield
-    await close_db_connections()
 
 
 def logging_initialize():

@@ -1,0 +1,12 @@
+---
+DEBUG: false
+
+REDIS_HOST: redis
+REDIS_PORT: 6379
+REDIS_DB: 0
+
+BINANCE_URL: https://api.binance.com/api/v3/ticker/price
+USD_EXCHANGE_URL: https://v6.exchangerate-api.com/v6
+COIN_GECKO_URL: https://api.coingecko.com/api/v3/simple/price
+
+API_KEY: c89c764546ca89f2cc883a7e

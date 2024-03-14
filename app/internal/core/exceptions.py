@@ -6,7 +6,8 @@ class AppException(Exception):
     error_code = 1
     module_code = 'APP'
     system_prefix: str | None = NotImplemented
-
+    status_code = NotImplemented
+    
     def __init__(self, msg='', value=None, cause=None, extra_data=None):
         super().__init__()
         self.msg = msg or self.msg
@@ -30,3 +31,10 @@ class UnknownException(AppException):
     system_prefix = 'APP'
     msg = 'Service error'
     error_code = 1
+    status_code = 500
+
+class ValidationError(AppException):
+    system_prefix = 'SERVICE'
+    msg = 'Input format must be TOKEN-to-TOKEN,etc.'
+    error_code = 1
+    status_code = 422

@@ -1,14 +1,44 @@
 ---
 services:
-  postgres:
-    image: postgres:15
-    container_name: postres_todo-list
+  nginx:
+      build:
+        dockerfile: ./deploy/docker/nginx.Dockerfile
+        context: .
+      ports:
+        - "80:80"
+      container_name: nginx_course_api
+      depends_on:
+        - api
+  redis:
+    image: redis:7
+    container_name: redis_course_api
     ports:
-      - '6500:5432'
+      - "${REDIS_PORT:-6501}:6379"
+  checker:
+    build:
+      dockerfile: ./deploy/docker/checker.Dockerfile
+      context: .
+    container_name: checker
     environment:
-      PGUSER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_USER: user
-      POSTGRES_DB: postgres
-    volumes:
-      - ./temp/compose/postgres:/var/lib/postgresql/data
+      PYTHONDONTWRITEBYTECODE: 1
+      PYTHONUNBUFFERED: 1
+      POETRY_VIRTUALENVS_CREATE: false
+      PYTHONPATH: "/project/app"
+    depends_on:
+      - redis
+  api:
+    build:
+      dockerfile: ./deploy/docker/api.Dockerfile
+      context: .
+    container_name: course_api
+    expose:
+      - 7070
+    ports:
+      - "${API_PORT:-7070}:7070"
+    environment:
+      PYTHONDONTWRITEBYTECODE: 1
+      PYTHONUNBUFFERED: 1
+      POETRY_VIRTUALENVS_CREATE: false
+      PYTHONPATH: "/project/app"
+    depends_on:
+      - redis

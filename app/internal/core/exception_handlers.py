@@ -7,7 +7,7 @@ from starlette.exceptions import HTTPException
 from starlette.responses import Response
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
-from internal.core.exceptions import UnknownException
+from internal.core.exceptions import UnknownException, AppException
 from internal.core.logs.helpers import exc_to_log, log_requests
 
 
@@ -37,3 +37,12 @@ async def request_validation_exception_handler(request: Request, exc: RequestVal
         status_code=HTTP_422_UNPROCESSABLE_ENTITY,
         content={'detail': jsonable_encoder(exc.errors())},
     )
+
+async def app_exception_handler(request: Request, exc: AppException):
+    exc_to_log(request)
+
+    body = {'errors': [{'code': exc.full_code(), 'name': exc.__class__.__name__, 'message': exc.msg, 'id': str(exc.uuid), 'value': exc.value}]}
+
+    log_requests(route=request.url.path, body=body, log_type='response')
+
+    raise HTTPException(status_code=exc.status_code, detail=exc.msg)

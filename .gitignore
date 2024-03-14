@@ -12,4 +12,3 @@ __pycache__
 poetry.toml
 .mypy_cache
 *.pot
-**/local.yaml

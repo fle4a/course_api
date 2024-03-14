@@ -46,4 +46,4 @@ poetry run pytest
 poetry run python3 app/main.py
 ```
 
-После запуска сервера FastAPI вы сможете отправлять запросы по адресу `http://localhost:8000/api/ping`, и получите в ответ "PONG".
+После запуска сервера FastAPI вы сможете отправлять запросы по адресу `http://localhost:70/api/ping`, и получите в ответ "PONG".
